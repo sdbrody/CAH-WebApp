@@ -57,12 +57,10 @@ public class CAHWebAppServlet extends HttpServlet {
     WhiteCard[] white = new WhiteCard[200];
     for (int i = 0; i < white.length; ++i)
       white[i] = new WhiteCard(i, "White_" + i);
-    System.out.println("before: " + gameIdStr);
-
+    
     new Game(datastore, gameId)
         .create(config, loadBlackDeck(), loadWhiteDeck());
-    System.out.println("after: " + gameIdStr);
-
+    
     response.println(new JSONObject().put("gameid", gameIdStr).toString());
     // TODO: invites?
   }
@@ -335,6 +333,7 @@ public class CAHWebAppServlet extends HttpServlet {
         // end transaction
         txn.commit();
         System.out.println("Transaction successful!");
+        return;
       } catch (ConcurrentModificationException e) {
         System.err.println("failed, " + retries + " left");
         if (retries == 0) {

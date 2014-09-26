@@ -51,23 +51,24 @@
           <div class='mini-winner'>~ {{history.prev.name}}</div>
         </div>
         <hr />
+        <div id='black' ng-show='!table.isVoted'>{{ blackCards[round.data.blackCard] }}</div>
         <div class='selection' ng-class="table.getClass(s)"
           ng-click='table.select(s)' ng-repeat='s in table.data.answers'>
           <div ng-repeat='c in s.cards'>
             <span ng-hide='$first && $last'> {{$index + 1}} . </span>{{whiteCards[c]}}
           </div>
         </div>
-        <button ng-click='table.submit()'>vote</button>
+        <button ng-show='!table.isVoted' ng-click='table.submit()'>vote</button>
       </div> <!-- card table -->
       
 			<div id='hand' ng-class="hand.isVisible ? '' : 'hidden'" ng-click='hand.toggleVisibility()'>
-				<div id='hand-header'>
+				<div id='hand-header' ng-show='!hand.isSubmitted'>
 					<span id='choose-wrap'> Choose {{ hand.data.numExpected }} </span>
 					<button id='hand-submit' ng-click='hand.submit(); $event.stopPropagation();'>submit</button>
 					<hr />
 				</div>
 				<div id='hand-cards'>
-				<div class='black card'>{{ blackCards[round.data.blackCard]}}</div>
+				<div class='black card' ng-show='!hand.isSubmitted'>{{ blackCards[round.data.blackCard]}}</div>
       
 				<div class='white card' ng-class="hand.getClass(c)"
 					ng-click='hand.select(c); $event.stopPropagation();' ng-repeat='c in hand.data.white'>

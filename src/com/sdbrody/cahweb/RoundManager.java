@@ -95,8 +95,7 @@ public class RoundManager {
   public void addSelection(String pid, int[] selection) throws StatusException {
     if (!hands.containsKey(pid))
       throw new StatusException(StatusException.StatusType.BAD_INPUT, "Selection attempt from non-existent player " + pid);
-    
-  
+
     if (selections.containsKey(pid))
       throw new StatusException(StatusException.StatusType.ILLEGAL, "Player " + pid + " already selected for round " + roundNumber);
         
@@ -178,7 +177,7 @@ public class RoundManager {
     // TODO: if not vote time, return null;
     Map<Integer, int[]> ret = new HashMap<Integer, int[]>();
     for (Map.Entry<Integer, String> entry : index.entrySet()) {
-      if (entry.getValue() != pid) {
+      if (!entry.getValue().equals(pid)) {
         ret.put(entry.getKey(), selections.get(entry.getValue()));
       }
     }

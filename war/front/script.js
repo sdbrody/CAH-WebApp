@@ -60,6 +60,7 @@ cah.controllers.Hand = function(httpService) {
   this.data = {};
   this.update();
   this.isVisible = true;
+  this.isSubmitted = false;
 };
 
 cah.controllers.Hand.prototype.isSelected = function(x) {
@@ -92,9 +93,15 @@ cah.controllers.Hand.prototype.select = function(x) {
 };
 
 cah.controllers.Hand.prototype.submit = function() {
+  if (this.selection.length != this.data.numExpected) {
+	alert('Please select ' + this.data.numExpected);
+	return;
+  }
   // post/get selection
   this.httpService.get('move&cards=' + this.selection, function(data) {
     this.update();
+    this.isVisible = false;
+    this.isSubmitted = true;
   }.bind(this));
   // wait for update
 };
@@ -107,6 +114,12 @@ cah.controllers.Hand.prototype.update = function() {
     console.log(data);
   }.bind(this));
 };
+
+cah.controllers.Hand.prototype.prepSelect = function() {
+	this.update();
+	this.isVisible = true;
+    this.isSubmitted = false;
+}
 
 cah.controllers.Hand.prototype.toggleVisibility = function() {
 	this.isVisible = !this.isVisible; 
@@ -162,6 +175,7 @@ cah.controllers.Table = function(httpService) {
 cah.controllers.Table.prototype.clear = function() {
   this.data.answers = [];
   this.vote = -1;
+  this.isVoted = false;
 }
 
 cah.controllers.Table.prototype.update = function() {
@@ -185,8 +199,12 @@ cah.controllers.Table.prototype.select = function(x) {
 
 cah.controllers.Table.prototype.submit = function() {
   // post/get selection
+  if (this.vote < 0) {
+	  alert('Please Select Card');
+	  return;
+  }
   this.httpService.get('vote&vote=' + this.vote, function(data) {
-    //this.update();
+    this.isVoted = true;
   }.bind(this));
   // wait for update
 };
@@ -363,8 +381,7 @@ app.controller('HandCtrl', function($scope, $http, $location) {
 	  
 	  if (phase == 'SELECTION') {
 		  $scope.table.clear();
-		  // for number of expected.
-		  $scope.hand.update();
+		  $scope.hand.prepSelect();
 		  $scope.scores.update();
 		  $scope.history.update($scope.round.data.round);
 	  }
