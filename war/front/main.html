@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="hand.css">
+  <link rel="stylesheet" href="table.css">
+  <link rel="stylesheet" href="history.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
+  <script src="script.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller='HandCtrl'>
+
+  <div id='wait-message' ng-hide='gameStarted()'> Waiting for game to start!</div> 
+  <div id='play-area' ng-show='gameStarted()'>
+    <div id='card-table'>
+        <div id='round-info'>
+          <table>
+            <tr>
+              <td>Round #</td>
+              <td>{{round.data.round}}</td>
+            </tr>
+            <tr>
+              <td>moved:</td>
+              <td>{{round.data.moved}}</td>
+            </tr>
+            <tr>
+              <td>voted:</td>
+              <td>{{round.data.voted}}</td>
+            </tr>
+          </table>
+        </div>
+        <div id='scores-panel'>
+          <div>Scores</div>
+          <table>
+            <tr ng-repeat='player in scores.data'>
+              <td>{{player.name}}</td>
+              <td>{{ player.score }}</td>
+            </tr>
+          </table>
+        </div>
+        <div id='prev-round'>
+          <div class='mini-black'>{{blackCards[history.prev.black]}}</div>
+          <div class='mini-white mini-win-card'>
+            <div
+              ng-repeat='c in history.prev.answers[history.prev.winner].cards'>
+              <span ng-hide='$first && $last'> {{$index + 1}} . </span>{{whiteCards[c]}}
+            </div>
+          </div>
+          <div class='mini-winner'>~ {{history.prev.name}}</div>
+        </div>
+        <hr />
+        <div class='selection' ng-class="table.getClass(s)"
+          ng-click='table.select(s)' ng-repeat='s in table.data.answers'>
+          <div ng-repeat='c in s.cards'>
+            <span ng-hide='$first && $last'> {{$index + 1}} . </span>{{whiteCards[c]}}
+          </div>
+        </div>
+        <button ng-click='table.submit()'>vote</button>
+      </div> <!-- card table -->
+      
+			<div id='hand' ng-class="hand.isVisible ? '' : 'hidden'" ng-click='hand.toggleVisibility()'>
+				<div id='hand-header'>
+					<span id='choose-wrap'> Choose {{ hand.data.numExpected }} </span>
+					<button id='hand-submit' ng-click='hand.submit(); $event.stopPropagation();'>submit</button>
+					<hr />
+				</div>
+				<div id='hand-cards'>
+				<div class='black card'>{{ blackCards[round.data.blackCard]}}</div>
+      
+				<div class='white card' ng-class="hand.getClass(c)"
+					ng-click='hand.select(c); $event.stopPropagation();' ng-repeat='c in hand.data.white'>
+					{{ hand.selectionIndex(c) }} {{ whiteCards[c]}}
+				</div>
+				</div>
+			</div> <!-- hand -->
+						
+	</div> <!-- play area -->
+	
+  <div id='right-panel' ng-show="gameStarted() && history.visible">
+    <div id='history-list'>History</div>
+  </div>
+</body>
+</html>
