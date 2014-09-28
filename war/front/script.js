@@ -319,8 +319,6 @@ app.controller('JoinCtrl', function($scope, $http, $location) {
 	}
 });
 
-
-
 // **************  Main ***************************** /
 
 app.controller('HandCtrl', function($scope, $http, $location) {
@@ -328,9 +326,10 @@ app.controller('HandCtrl', function($scope, $http, $location) {
   console.log(params['gameid']);
   console.log(params['playerid']);
   // Load white cards.
+  // url: 'http://cah-web.appspot.com/data/white_cards.json'
   $http({
     method: 'GET',
-    url: 'http://cah-web.appspot.com/data/white_cards.json'
+    url: '../data/white_cards.json'
   }).
   success(function(data, status) {
     $scope.whiteCards = data;
