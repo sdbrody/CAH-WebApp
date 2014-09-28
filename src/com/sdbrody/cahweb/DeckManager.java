@@ -21,16 +21,25 @@ public class DeckManager {
   private int blackTop;
   
 
-  public DeckManager(BlackCard[] black, int num_white) {
-    // replace with actual data
-    whiteCards = new ArrayList<Integer>(num_white);
-    for (int i = 0; i < num_white; ++i) {
+  /*
+   * @numCards is an array with the number of white cards in cell 0, number of black cards
+   * with one slot in cell 1, number of black cards with two slots in cell 2, etc. 
+   */
+  public DeckManager(int[] numCards) {
+    whiteCards = new ArrayList<Integer>(numCards[0]);
+    for (int i = 0; i < numCards[0]; ++i) {
       whiteCards.add(i);
     }
     restartDeck(false);
-    blackCards = new ArrayList<BlackCard>(black.length);
-    for (int i = 0; i < black.length; ++i) {
-      blackCards.add(black[i]);
+    
+    blackCards = new ArrayList<BlackCard>();
+    int id = 0;
+    for (int numSlots = 1; numSlots <  numCards.length; ++numSlots) {
+      System.out.print("cards with one slot: " + id);
+      for (int j = 0; j < numCards[numSlots]; ++j, ++id) {
+        blackCards.add(new BlackCard(id, numSlots));
+      }
+      System.out.println(" - " + (id - 1));
     }
     restartDeck(true);
   }

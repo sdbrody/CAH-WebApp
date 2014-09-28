@@ -8,28 +8,21 @@ import com.google.appengine.api.datastore.Key;
 import com.sdbrody.cahweb.Player.PlayerType;
 
 public class Game {
-  /*
-  // Players
-  protected Map<String, Player> players;
-
-  // Round
-  protected RoundManager round;
-
-  // Game State
-  protected GlobalState globalState;
-  protected ArrayList<HistoricRound> history;
-
-  // Game Init
-  protected final GameConfiguration config;
-  protected DeckManager deck;
-   */
   protected DatastoreService datastore;
   protected final Key id;
 
-  public void create(GameConfiguration config, final BlackCard[] black, final WhiteCard[] white) throws StatusException {
+  /*
+   * @numCards is an array with the number of white cards in cell 0, number of black cards
+   * with one slot in cell 1, number of black cards with two slots in cell 2, etc. 
+   */
+  public void create(GameConfiguration config, int[] numCards) throws StatusException {
+    if (numCards.length < 2) {
+      throw new StatusException(StatusException.StatusType.BAD_INPUT,
+          "Cards array must have at least two numbers - white and black cards. Saw " + numCards);
+    }
     config.store(datastore, id);
     
-    (new DeckManager(black, white.length)).store(datastore, id);
+    (new DeckManager(numCards)).store(datastore, id);
     
     (new RoundManager()).store(datastore, id);
   }

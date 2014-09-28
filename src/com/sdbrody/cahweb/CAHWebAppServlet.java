@@ -27,6 +27,10 @@ import com.sdbrody.cahweb.RoundManager.RoundPhase;
 @SuppressWarnings("serial")
 public class CAHWebAppServlet extends HttpServlet {
 	
+  private int[] CreateDecks() {
+    return new int[]{631, 117, 22, 3};
+  }
+  /*
   private BlackCard[] loadBlackDeck() {
     BlackCard[] black = new BlackCard[142];
     for (int i = 0; i < black.length; ++i) {
@@ -38,13 +42,13 @@ public class CAHWebAppServlet extends HttpServlet {
     return black;
   }
   
-  private WhiteCard[] loadWhiteDeck() {
+  private WhiteCard[] loadWhiteDeck(int size) {
     WhiteCard[] white = new WhiteCard[631];
     for (int i = 0; i < white.length; ++i)
-      white[i] = new WhiteCard(i, "White_" + i);
+      white[i] = new WhiteCard(i);
     return white;
   }
-  
+  */
 	// Handlers
 	// new game Post
   public void handleNewGame(DatastoreService datastore, String gameIdStr, PrintWriter response) throws StatusException {
@@ -54,12 +58,7 @@ public class CAHWebAppServlet extends HttpServlet {
     GameConfiguration config = new GameConfiguration(10, VoteMode.VOTE, false,
         false);
 
-    WhiteCard[] white = new WhiteCard[200];
-    for (int i = 0; i < white.length; ++i)
-      white[i] = new WhiteCard(i, "White_" + i);
-    
-    new Game(datastore, gameId)
-        .create(config, loadBlackDeck(), loadWhiteDeck());
+    new Game(datastore, gameId).create(config, CreateDecks());
     
     response.println(new JSONObject().put("gameid", gameIdStr).toString());
     // TODO: invites?

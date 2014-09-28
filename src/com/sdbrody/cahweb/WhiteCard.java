@@ -4,21 +4,15 @@ import java.io.Serializable;
 
 public class WhiteCard implements Serializable {
   private static final long serialVersionUID = 1L;
-  public WhiteCard(int id, String text) {
+  public WhiteCard(int id) {
     this.id = id;
-    this.text = text;
   }
   @Override
   public String toString() {
-    return text;
-  }
-  public String getText() {
-    return text;
+    return "WhiteCard_" + id;
   }
   public int getId() {
     return id;
   }
   protected int id;
-  protected final String text;
-  
 }
