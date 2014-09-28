@@ -326,7 +326,6 @@ app.controller('HandCtrl', function($scope, $http, $location) {
   console.log(params['gameid']);
   console.log(params['playerid']);
   // Load white cards.
-  // url: 'http://cah-web.appspot.com/data/white_cards.json'
   $http({
     method: 'GET',
     url: '../data/white_cards.json'
@@ -341,7 +340,7 @@ app.controller('HandCtrl', function($scope, $http, $location) {
   // Load black cards.
   $http({
     method: 'GET',
-    url: 'http://cah-web.appspot.com/data/black_cards.json'
+    url: '../data/black_cards.json'
   }).
   success(function(data, status) {
     $scope.blackCards = data;
