@@ -1,5 +1,9 @@
 new game
-  no params
+  params:
+    w: <num_white_cards>
+    b1: <num_black_cards_1_slot>
+    b2: <num_black_cards_2_slots>  // optional
+    b3: <num_black_cards_3_slots>  // optional
 
   response {
     gameid: string

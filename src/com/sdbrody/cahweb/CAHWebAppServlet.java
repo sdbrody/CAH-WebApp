@@ -2,6 +2,7 @@ package com.sdbrody.cahweb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,38 +28,24 @@ import com.sdbrody.cahweb.RoundManager.RoundPhase;
 @SuppressWarnings("serial")
 public class CAHWebAppServlet extends HttpServlet {
 	
-  private int[] CreateDecks() {
-    return new int[]{631, 117, 22, 3};
-  }
-  /*
-  private BlackCard[] loadBlackDeck() {
-    BlackCard[] black = new BlackCard[142];
-    for (int i = 0; i < black.length; ++i) {
-      int slots = 3;
-      if (i > 2) slots = 2;
-      if (i > 24) slots = 1;
-      black[i] = new BlackCard(i, slots);
-    }
-    return black;
+  private int[] CreateDecks(final Map<String, String[]> params) throws StatusException{
+    int b2 = 0;
+    if (params.containsKey("b2")) b2 = getInt(params, "b2");
+    int b3 = 0;
+    if (params.containsKey("b3")) b3 = getInt(params, "b3"); 
+    return new int[]{ getInt(params, "w"),  getInt(params, "b1"), b2, b3};
   }
   
-  private WhiteCard[] loadWhiteDeck(int size) {
-    WhiteCard[] white = new WhiteCard[631];
-    for (int i = 0; i < white.length; ++i)
-      white[i] = new WhiteCard(i);
-    return white;
-  }
-  */
 	// Handlers
 	// new game Post
-  public void handleNewGame(DatastoreService datastore, String gameIdStr, PrintWriter response) throws StatusException {
+  public void handleNewGame(DatastoreService datastore, String gameIdStr, int[] numCards, PrintWriter response) throws StatusException {
     System.out.println("Attempting create new game: " + gameIdStr);
 
     Key gameId = KeyFactory.createKey("Game", gameIdStr);
     GameConfiguration config = new GameConfiguration(10, VoteMode.VOTE, false,
         false);
 
-    new Game(datastore, gameId).create(config, CreateDecks());
+    new Game(datastore, gameId).create(config, numCards);
     
     response.println(new JSONObject().put("gameid", gameIdStr).toString());
     // TODO: invites?
@@ -103,7 +90,7 @@ public class CAHWebAppServlet extends HttpServlet {
 	}
 	
 	private String getAction(final Map<String, String[]> params) throws StatusException {
-	  if (params.isEmpty())
+	  if (!params.containsKey("gameid"))
 	    return new String("newgame");
 	  return getString(params, "action", true);
 	}
@@ -120,7 +107,9 @@ public class CAHWebAppServlet extends HttpServlet {
 	  // Handle puts
     switch(action) {
     case "newgame":
-      handleNewGame(datastore, gameIdStr, response);
+      int[] numCards = CreateDecks(params);
+      System.out.println("Starting game with numCards = " + Arrays.toString(numCards));
+      handleNewGame(datastore, gameIdStr, numCards, response);
       return;
       
     case "register":
@@ -371,7 +360,7 @@ public class CAHWebAppServlet extends HttpServlet {
 	  @SuppressWarnings("unchecked")
     final Map<String, String[]> params = req.getParameterMap();
 	  String gameIdStr;
-    if (params.isEmpty()) {
+    if (!params.containsKey("gameid")) {
       gameIdStr = "G" + randomKey();
     } else {
       gameIdStr = req.getParameter("gameid");

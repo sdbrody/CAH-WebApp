@@ -26,6 +26,7 @@ public class DeckManager {
    * with one slot in cell 1, number of black cards with two slots in cell 2, etc. 
    */
   public DeckManager(int[] numCards) {
+    System.out.println("white cards:" + numCards[0]);
     whiteCards = new ArrayList<Integer>(numCards[0]);
     for (int i = 0; i < numCards[0]; ++i) {
       whiteCards.add(i);
@@ -35,7 +36,7 @@ public class DeckManager {
     blackCards = new ArrayList<BlackCard>();
     int id = 0;
     for (int numSlots = 1; numSlots <  numCards.length; ++numSlots) {
-      System.out.print("cards with one slot: " + id);
+      System.out.print("black cards with one slot: " + id);
       for (int j = 0; j < numCards[numSlots]; ++j, ++id) {
         blackCards.add(new BlackCard(id, numSlots));
       }

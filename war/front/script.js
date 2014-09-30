@@ -42,7 +42,7 @@ cah.services.HttpService.prototype.get = function(action, callback) {
 };
 
 cah.services.HttpService.prototype.newGame = function(callback) {
-	this.http.get('/cahwebapp')
+	this.http.get('/cahwebapp?w=631&b1=117&b2=22&b3=3')
 	.success(function(data) {
 		this.gid = data.gameid;
 		callback(data);
