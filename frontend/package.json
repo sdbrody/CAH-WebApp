@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bower update && pub install"
+    "postinstall": "bower update && pub install",
+    "serve": "pub serve"
   },
   "devDependencies": {
     "bower": "^1.3.12"
