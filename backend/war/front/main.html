@@ -16,27 +16,14 @@
   <div id='play-area' ng-show='gameStarted()'>
     <div id='card-table'>
         <div id='round-info'>
+          <div>Round # {{round.data.round}} </div>
           <table>
-            <tr>
-              <td>Round #</td>
-              <td>{{round.data.round}}</td>
-            </tr>
-            <tr>
-              <td>moved:</td>
-              <td>{{round.data.moved.length}}</td>
-            </tr>
-            <tr>
-              <td>voted:</td>
-              <td>{{round.data.voted.length}}</td>
-            </tr>
-          </table>
-        </div>
-        <div id='scores-panel'>
-          <div>Scores</div>
-          <table>
+            <tr> <td> Player </td><td> Score </td><td>Moved</td><td>Voted</td>
             <tr ng-repeat='player in scores.data'>
-              <td>{{player.name}}</td>
+              <td>{{ player.name }}</td>
               <td>{{ player.score }}</td>
+              <td> <span ng-show='round.data.moved.indexOf(player.name) != -1'> &#10004; </span> </td>
+              <td> <span ng-show='round.data.voted.indexOf(player.name) != -1'> &#10004; </span> </td>
             </tr>
           </table>
         </div>

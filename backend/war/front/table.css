@@ -17,14 +17,14 @@
 	border: 1px solid green;
 }
 
-#round-info,#scores-panel,#prev-round {
+#round-info,#prev-round {
 	border-radius: 10px;
 	padding: 1%;
 	margin: 1%;
 }
 
 #round-info {
-	width: 15%;
+	max-width: 40%;
 	border: 1px solid green;
 	float: left;
 }
