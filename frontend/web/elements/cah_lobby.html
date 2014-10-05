@@ -1,0 +1,58 @@
+<link rel="import" href="packages/polymer/polymer.html">
+<link rel="import" href="packages/core_elements/core_ajax_dart.html">
+<link rel="import" href="cah_rpc.html">
+
+<polymer-element name="cah-lobby" attributes="gameId owner">
+  <template>
+    <template if="{{playerId == null}}">
+      <form on-submit="{{joinGame}}">
+        <label>Name</label>
+        <input value="{{name}}" required>
+        <button>Join</button>
+      </form>
+      <cah-rpc
+        id="joinRpc"
+        action="register"
+        params="{{ {gameid: gameId,
+                     name: name,
+                     type: 'web',
+                     watcher: 'false'} }}"
+        on-core-response="{{joined}}">
+      </cah-rpc>
+    </template>
+    <template if="{{playerId}}">
+      <input readonly="readonly" onClick="this.select()"
+        value="{{protocol}}//{{host}}/#/g/{{gameId}}/join">
+    </template>
+    <h2>Other Players</h2>
+    <ul>
+      <template repeat="{{player in configResponse['players']}}">
+        <li>{{player['name']}}</li>
+      </template>
+    </ul>
+    <a href="/#/">Go</a>
+    <cah-rpc
+      auto
+      id="configRpc"
+      action="getconfig"
+      params="{{ {gameid: gameId} }}"
+      response="{{configResponse}}">
+    </cah-rpc>
+    <cah-rpc
+      auto
+      id="roundRpc"
+      action="getround"
+      params="{{ {gameid: gameId} }}"
+      response="{{roundResponse}}">
+    </cah-rpc>
+    <cah-rpc
+      id="startRpc"
+      action="start"
+      params="{{ {gameid: gameId, playerid: playerId} }}">
+    </cah-rpc>
+    <template if="{{playerId != null && owner}}">
+      <button on-click="{{start}}">Start Game</button>
+    </template>
+  </template>
+  <script type="application/dart" src="cah_lobby.dart"></script>
+</polymer-element>
