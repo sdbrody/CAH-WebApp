@@ -27,6 +27,7 @@
     stale session data. For details, see
     http://code.google.com/appengine/docs/java/config/appconfig.html#Enabling_Sessions
   -->
+  <public-root>/front/</public-root>
 <static-files>
   <include path="/data/*.*" >
     <http-header name="Access-Control-Allow-Origin" value="*" />
