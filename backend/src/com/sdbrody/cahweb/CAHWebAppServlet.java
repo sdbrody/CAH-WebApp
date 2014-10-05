@@ -257,8 +257,10 @@ public class CAHWebAppServlet extends HttpServlet {
 	    return;
 	    
 	  case "getround" :
+	    config = new Game(datastore, gameId).getConfig();
 	    RoundManager round = new Game(datastore, gameId).getRound();
-	    response.println(round.toString());
+	    
+	    response.println(round.getRoundStatus(config.getPlayers()));
 	    return;
 	  
 	  case "getscores" :

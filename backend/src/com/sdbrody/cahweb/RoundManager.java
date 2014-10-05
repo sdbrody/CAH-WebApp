@@ -262,6 +262,29 @@ public class RoundManager {
     return toJSON().toString();
   }
   
+  public JSONObject getRoundStatusJSON(final Map<String, Player> players) {
+    JSONArray moved = new JSONArray();
+    for (String id : selections.keySet()) {
+      moved.put(players.get(id).name);
+    }
+    JSONArray voted = new JSONArray();
+    for (String id : votes.keySet()) {
+      voted.put(players.get(id).name);
+    }
+    return new JSONObject().
+        put("round", roundNumber).
+        put("phase", getPhase().toString()).
+        put("blackCard", blackCard.id).
+        put("moved", moved).
+        put("voted", voted).
+        put("numPlayers", players.size());
+  }
+  
+  
+  public String getRoundStatus(final Map<String, Player> players) {
+    return getRoundStatusJSON(players).toString();
+  }
+  
   private int roundNumber;
   private BlackCard blackCard;
   private Map<String, HashSet<Integer>> hands;

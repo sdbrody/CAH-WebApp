@@ -74,8 +74,9 @@ get game configuration
      round: int  // round number
      phase: {"SELECTION" , "VOTING", "ROUND_DONE"}
      blackCard: int
-     moved: int  // how many have moved
-     voted: int  // how many have voted
+     moved: [ string ] // names of players who have moved
+     voted: [ string ] // names of players who have voted
+     numPlayers: int // total number of players in the game
    }
      
   
