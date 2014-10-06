@@ -1,12 +1,13 @@
+/// The "card table". Where card selection and voting happens.
+
 import 'package:polymer/polymer.dart';
 
-import 'base.dart';
-
 @CustomTag('cah-table')
-class TableElement extends CahElement {
+class TableElement extends PolymerElement {
   @published String gameId;
   @published String playerId;
 
+  // TODO(hjfreyer): Cache these.
   @observable List<String> whiteCards;
   @observable List<String> blackCards;
 

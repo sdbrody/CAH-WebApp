@@ -6,7 +6,6 @@
 <polymer-element name="cah-table" attributes="gameId playerId">
   <template>
     <link rel="stylesheet" href="cah_table.css">
-    <!-- <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css"> -->
     <core-ajax-dart
       auto url="/data/black_cards.json" handleAs="json" response="{{blackCards}}">
     </core-ajax-dart>
@@ -31,17 +30,6 @@
             on-click="{{select}}">{{whiteCards[card]}}</div>
         </template>
       </div>
-      <!-- <template repeat="{{card in handResponse['white']}}">
-        <div class="card-table">
-          <div class="card-stack">
-              <div class="white-card">{{whiteCards[card]}}</div>
-          </div>
-            </template>
-        </template>
-      </div>
-      <div class="scores">
-        Wgat up
-      </div> -->
     </div>
   </template>
   <script type="application/dart" src="cah_table.dart"></script>

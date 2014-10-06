@@ -1,9 +1,10 @@
+// General things.
+*, *:before, *:after { box-sizing: border-box }
+
 $cardPadding: 1.25em;
 $cardWidth: 12em;
 $cardHeight: 17em;
 $brandSizeRatio: 0.6;
-
-*, *:before, *:after { box-sizing: border-box }
 
 @mixin card($bg) {
   display: block;
@@ -42,17 +43,12 @@ $brandSizeRatio: 0.6;
 }
 
 @mixin leaning {
-  -webkit-transform-origin: -$cardPadding $cardHeight + $cardPadding * 2;
+  transform-origin: -$cardPadding $cardHeight + $cardPadding * 2;
 
-  transition: -webkit-transform 180ms;
+  transition: transform 180ms;
   &:hover {
-    -webkit-transform: rotate(5deg);
+    transform: rotate(5deg);
   }
-}
-
-body {
-  position: relative;
-  z-index: 1;
 }
 
 .white-card {
@@ -64,13 +60,7 @@ body {
   color: white;
 }
 
-.card-outline {
-  height: $cardHeight;
-  width: $cardWidth;
-  border: 2px dashed black;
-  border-radius: 0.5em;
-}
-
+// Make it so the bottoms of card stacks clear the bottom of the last card.
 .card-stack .white-card:last-child, .card-stack .black-card:last-child {
   height: $cardHeight;
 }

@@ -1,26 +1,27 @@
+/// Wrapper for core-ajax specifically for doing RPCs to the backend.
+
 import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 
 import "../config.dart";
-import "base.dart";
 
 @CustomTag('cah-rpc')
-class RpcElement extends CahElement {
+class RpcElement extends PolymerElement {
   @published bool auto = false;
   @published String action;
-  @published var params;
+  @published Map<String, String> params;
   @published var response;
 
   RpcElement.created() : super.created();
 
-  attached() {
+  void attached() {
     if (auto) {
       go();
     }
   }
 
-  go() {
+  void go() {
     var rpc = $['rpc'];
     rpc.url = RPC_ENDPOINT;
 

@@ -1,12 +1,14 @@
+/// Lobby element which users use to give their name, see who has joined, and
+/// start the game (if owner).
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 
-import 'base.dart';
-
 @CustomTag('cah-lobby')
-class LobbyElement extends CahElement {
+class LobbyElement extends PolymerElement {
+  // TODO(hjfreyer): Abstract polling into a subelement.
   Timer pollTimer;
 
   @published String gameId;
@@ -27,30 +29,30 @@ class LobbyElement extends CahElement {
     host = window.location.host;
   }
 
-  detached() {
+  void detached() {
     pollTimer.cancel();
   }
 
-  joinGame(e) {
+  void joinGame(e) {
     $['joinRpc'].go();
     e.preventDefault();
   }
 
-  joined(e) {
+  void joined(e) {
     playerId = e.detail['response']['playerid'];
   }
 
-  poll(timer) {
+  void poll(timer) {
     $['configRpc'].go();
     $['roundRpc'].go();
     print('poll');
   }
 
-  start() {
+  void start() {
     $['startRpc'].go();
   }
 
-  roundResponseChanged() {
+  void roundResponseChanged() {
     if (roundResponse['blackCard'] != -1 && playerId != null) {
       print('started');
       fire('game-started', detail: {

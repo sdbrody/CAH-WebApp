@@ -1,4 +1,5 @@
 frontend/.buildlog
-frontend/web/bower_components
+frontend/build
 frontend/node_modules
+frontend/web/bower_components
 packages

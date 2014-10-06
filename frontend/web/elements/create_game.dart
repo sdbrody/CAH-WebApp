@@ -3,10 +3,8 @@ import 'dart:convert';
 
 import 'package:polymer/polymer.dart';
 
-import 'base.dart';
-
 @CustomTag('create-game')
-class CreateGameElement extends CahElement {
+class CreateGameElement extends PolymerElement {
   @observable String gameId;
 
   CreateGameElement.created() : super.created();
