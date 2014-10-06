@@ -4,8 +4,6 @@ import 'package:polymer/polymer.dart';
 
 import 'package:route/client.dart';
 
-final allUrls = [homeUrl, articleUrl];
-
 class Page {
   final String name;
   final UrlPattern pattern;
@@ -47,12 +45,12 @@ class CahAppElement extends PolymerElement {
     }
 
     router
-      ..addHandler(new UrlPattern('/'), (p) => router.gotoPath('/#/', TITLE))
+      ..addHandler(new UrlPattern('/'), (p) => router.gotoPath('/#/', title))
       ..listen();
   }
 
   void gameStarted(event) {
     var d = event.detail;
-    router.gotoUrl(TABLE.pattern, [d['gameId'], d['playerId']], TITLE);
+    router.gotoUrl(table.pattern, [d['gameId'], d['playerId']], title);
   }
 }
