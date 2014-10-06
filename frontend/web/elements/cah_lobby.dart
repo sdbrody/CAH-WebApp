@@ -2,7 +2,6 @@
 /// start the game (if owner).
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 

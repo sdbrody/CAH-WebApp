@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:polymer/polymer.dart';
 
 @CustomTag('create-game')
