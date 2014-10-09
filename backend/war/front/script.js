@@ -144,7 +144,8 @@ cah.controllers.Round = function(httpService, callback) {
 	  this.socket.onmessage = function(message) {
 		console.log('channel message:');  
 	  	console.log(message);
-	  }
+	  	this.update();
+	  }.bind(this)
 	  //socket.onerror = onError;
 	  this.socket.onclose = function() {
 		  alert('channel to server closed')
@@ -159,7 +160,7 @@ cah.controllers.Round.prototype.update = function() {
     this.data = data;
     if (data.phase != old.phase)
       this.callback(data.phase);
-    window.setTimeout(this.update.bind(this), 2000);
+    //window.setTimeout(this.update.bind(this), 2000);
   }.bind(this));
 };
 
