@@ -138,14 +138,16 @@ cah.controllers.Round = function(httpService, callback) {
   this.httpService.get('getchannel', function (data) {
 	  channel = new goog.appengine.Channel(data.channel);
 	  this.socket = channel.open();
-	  //socket.onopen = onOpened;
+	  this.socket.onopen = function() {
+		  console.log("channel opened");
+	  }
 	  this.socket.onmessage = function(message) {
 		console.log('channel message:');  
 	  	console.log(message);
 	  }
 	  //socket.onerror = onError;
-	  socket.onclose = function() {
-		  console.log('channel closed')
+	  this.socket.onclose = function() {
+		  alert('channel to server closed')
 	  }
   }.bind(this));
   this.update();
