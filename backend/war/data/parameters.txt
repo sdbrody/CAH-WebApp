@@ -19,6 +19,7 @@ register player
   
   response {
     playerid: string
+    channel : string
   }
   
 start game
@@ -79,6 +80,16 @@ get game configuration
      numPlayers: int // total number of players in the game
    }
      
+ get player channel
+  params:
+     gameid=<gameid>
+     playerid=<pid>
+     action=getchannel
+     
+   response {
+     channel : string
+   }
+  
   
  get player hand
    params:

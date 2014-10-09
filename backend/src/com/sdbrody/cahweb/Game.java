@@ -32,16 +32,15 @@ public class Game {
     this.id = id;
   }
   
-  public void registerPlayer(String pid, String name, PlayerType type, boolean isPassive) throws StatusException {
+  public void registerPlayer(String pid, String name, PlayerType type, boolean isPassive, String channel) throws StatusException {
     RoundManager round = RoundManager.retrieve(datastore, id);
     
     if (round.getRoundNumber() != 0)
       throw new StatusException(StatusException.StatusType.ILLEGAL, "Attempted to register player " + name + " after game started");
     
     GameConfiguration config = GameConfiguration.retrieve(datastore, id);
-    
     boolean isOwner = (config.getPlayers().size() == 0);
-    config.AddPlayer(pid, new Player(name, type, isPassive, isOwner));
+    config.AddPlayer(pid, new Player(name, type, isPassive, isOwner, channel));
     
     config.store(datastore, id);
   }

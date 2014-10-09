@@ -15,12 +15,14 @@ public class Player implements Serializable{
   public final PlayerType type;
   public final boolean isPassive;
   public final boolean isOwner;
+  public String channel;
   
-  public Player(String name, PlayerType type, boolean isPassive, boolean isOwner) {
+  public Player(String name, PlayerType type, boolean isPassive, boolean isOwner, String channel) {
     this.name = name;
     this.type = type;
     this.isPassive = isPassive;
     this.isOwner = isOwner;
+    this.channel = channel;
   }
 
   public JSONObject toJSON() {

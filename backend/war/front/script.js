@@ -134,7 +134,20 @@ cah.controllers.Hand.prototype.setVisibility = function(vis) {
 cah.controllers.Round = function(httpService, callback) {
   this.httpService = httpService;
   this.callback = callback;
-  this.data = { moved: 0, round: 0 };
+  this.data = { moved: [], voted: [], round: 0 };
+  this.httpService.get('getchannel', function (data) {
+	  channel = new goog.appengine.Channel(data.channel);
+	  this.socket = channel.open();
+	  //socket.onopen = onOpened;
+	  this.socket.onmessage = function(message) {
+		console.log('channel message:');  
+	  	console.log(message);
+	  }
+	  //socket.onerror = onError;
+	  socket.onclose = function() {
+		  console.log('channel closed')
+	  }
+  }.bind(this));
   this.update();
 };
 

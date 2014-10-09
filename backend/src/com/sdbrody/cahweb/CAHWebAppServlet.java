@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 //import net.sf.json.JSONObject;
 import org.json.JSONObject;
 
+import com.google.appengine.api.channel.ChannelMessage;
+import com.google.appengine.api.channel.ChannelService;
+import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Key;
@@ -51,8 +54,15 @@ public class CAHWebAppServlet extends HttpServlet {
     // TODO: invites?
   }
 	
-	public boolean notify(GameConfiguration config, RoundPhase phase) {
-	  // TODO
+	public boolean notify(GameConfiguration config, String action) {
+	  ChannelService channelService = ChannelServiceFactory.getChannelService();
+	  
+	  for (final Player player : config.players.values()) {
+	    System.out.println("notifying " + player.name + ": " + action);
+	    if (player.channel != null) {
+	      channelService.sendMessage(new ChannelMessage(player.channel, action));
+	    }
+	  }
 	  return true;
 	}
 	
@@ -129,10 +139,13 @@ public class CAHWebAppServlet extends HttpServlet {
       
       String name = getString(params, "name", false);
       
-      new Game(datastore, gameId).
-      registerPlayer(pid, name, type, isPassive);
+      ChannelService channelService = ChannelServiceFactory.getChannelService();
+
+      String channel = channelService.createChannel(gameIdStr + ":" + pid);
       
-      response.println(new JSONObject().put("playerid", pid).toString());
+      new Game(datastore, gameId).registerPlayer(pid, name, type, isPassive, channel);
+      
+      response.println(new JSONObject().put("playerid", pid).put("channel", channel).toString());
       return;
       
     case "start":
@@ -176,10 +189,10 @@ public class CAHWebAppServlet extends HttpServlet {
       deck.discard(hand, selection);
       deck.drawToSize(hand, config.cardsPerHand);
       
-      if (round.getPhase() == RoundPhase.VOTING) {
+      /*if (round.getPhase() == RoundPhase.VOTING) {
         if (!notify(config, RoundPhase.VOTING))
           System.err.println("notification error");
-      }
+      }*/
       
       round.store(datastore, gameId);
       
@@ -224,9 +237,9 @@ public class CAHWebAppServlet extends HttpServlet {
         historic.store(datastore, gameId);
         
         // update scores
-        if (!notify(config, RoundPhase.VOTING)) {
+        /*if (!notify(config, RoundPhase.VOTING)) {
           System.err.println("notification error");
-        }
+        }*/
       }
       
       round.store(datastore, gameId);
@@ -246,13 +259,14 @@ public class CAHWebAppServlet extends HttpServlet {
 	  String action = getAction(params);
 	  
 	  Key gameId = KeyFactory.createKey("Game", gameIdStr);
-	  
+	  GameConfiguration config = null;
+    
     System.out.println("Handling action " + action);
     
 	  // *********************  Handle gets ************************
 	  switch(action) {
 	  case "getconfig":
-	    GameConfiguration config = new Game(datastore, gameId).getConfig();
+	    config = new Game(datastore, gameId).getConfig();
 	    response.println(config.toString());
 	    return;
 	    
@@ -264,15 +278,21 @@ public class CAHWebAppServlet extends HttpServlet {
 	    return;
 	  
 	  case "getscores" :
+	    config = new Game(datastore, gameId).getConfig();
 	    round = new Game(datastore, gameId).getRound();
-      
-      config = new Game(datastore, gameId).getConfig();
       
       response.println(round.scoresToJSon(config.getPlayers()).toString());
       return;
+      
+	  case "getchannel" :
+	    config = new Game(datastore, gameId).getConfig();
+	    String pid = getString(params, "playerid", false);
+	    response.println(
+	        new JSONObject().put("channel" , config.getPlayers().get(pid).channel).toString());
+	    return;
 	    
 	  case "gethand" :
-	    String pid = getString(params, "playerid", false);
+	    pid = getString(params, "playerid", false);
       
 	    round = new Game(datastore, gameId).getRound();
       
@@ -294,12 +314,10 @@ public class CAHWebAppServlet extends HttpServlet {
       return;
      
 	  case "gethistory" :
+	    config = new Game(datastore, gameId).getConfig();
       Integer index = getInt(params, "round");
       
-      Game game = new Game(datastore, gameId);
-      HistoricRound historic = game.getHistoricRound(index);
-      
-      config = game.getConfig();
+      HistoricRound historic = new Game(datastore, gameId).getHistoricRound(index);
       
       response.println(historic.toJSON(config.getPlayers()).toString());
       return;
@@ -323,6 +341,9 @@ public class CAHWebAppServlet extends HttpServlet {
         // end transaction
         txn.commit();
         System.out.println("Transaction successful!");
+        config = new Game(datastore, gameId).getConfig();
+        
+        notify(config, action);
         return;
       } catch (ConcurrentModificationException e) {
         System.err.println("failed, " + retries + " left");
